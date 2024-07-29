@@ -1,0 +1,15 @@
+# Ignore object files
+*.o
+
+# Ignore dependency files
+*.d
+
+# Ignore binary files
+*.bin
+
+# Ignore ELF files
+*.elf
+
+# Ignore map files
+*.map
+
