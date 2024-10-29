@@ -14,7 +14,7 @@ void timer_setup(void) {
     // High Level Timer Configuration
     timer_set_mode(TIM2, TIM_CR1_CKD_CK_INT, TIM_CR1_CMS_EDGE, TIM_CR1_DIR_UP);
 
-    // Setup PWm Mode
+    // Setup PWM Mode
     timer_set_oc_mode(TIM2, TIM_OC1, TIM_OCM_PWM1);
 
     // Enable PWM Outpput
