@@ -1,4 +1,7 @@
-# Ignore object files
+# Ignore compile_commands.json cache
+**/.cache/
+
+#Ignore object files
 *.o
 
 # Ignore dependency files
