@@ -23,14 +23,15 @@
       "-DSTM32F4",
       "-I../libopencm3/include",
       "-Iinc",
+      "-I../shared/inc",
       "-c",
       "-o",
       "src/firmware.o",
       "src/firmware.c"
     ],
-    "directory": "/home/arjun/Documents/bare-metal-firmware-stm32/app",
-    "file": "/home/arjun/Documents/bare-metal-firmware-stm32/app/src/firmware.c",
-    "output": "/home/arjun/Documents/bare-metal-firmware-stm32/app/src/firmware.o"
+    "directory": "/home/arjun/Documents/simple-photoframe/app",
+    "file": "/home/arjun/Documents/simple-photoframe/app/src/firmware.c",
+    "output": "/home/arjun/Documents/simple-photoframe/app/src/firmware.o"
   },
   {
     "arguments": [
@@ -56,9 +57,9 @@
       "src/bootloader.o",
       "src/bootloader.S"
     ],
-    "directory": "/home/arjun/Documents/bare-metal-firmware-stm32/app",
-    "file": "/home/arjun/Documents/bare-metal-firmware-stm32/app/src/bootloader.S",
-    "output": "/home/arjun/Documents/bare-metal-firmware-stm32/app/src/bootloader.o"
+    "directory": "/home/arjun/Documents/simple-photoframe/app",
+    "file": "/home/arjun/Documents/simple-photoframe/app/src/bootloader.S",
+    "output": "/home/arjun/Documents/simple-photoframe/app/src/bootloader.o"
   },
   {
     "arguments": [
@@ -84,14 +85,15 @@
       "-DSTM32F4",
       "-I../libopencm3/include",
       "-Iinc",
+      "-I../shared/inc",
       "-c",
       "-o",
-      "src/core/system.o",
-      "src/core/system.c"
+      "../shared/src/system.o",
+      "../shared/src/system.c"
     ],
-    "directory": "/home/arjun/Documents/bare-metal-firmware-stm32/app",
-    "file": "/home/arjun/Documents/bare-metal-firmware-stm32/app/src/core/system.c",
-    "output": "/home/arjun/Documents/bare-metal-firmware-stm32/app/src/core/system.o"
+    "directory": "/home/arjun/Documents/simple-photoframe/app",
+    "file": "/home/arjun/Documents/simple-photoframe/shared/src/system.c",
+    "output": "/home/arjun/Documents/simple-photoframe/shared/src/system.o"
   },
   {
     "arguments": [
@@ -117,13 +119,14 @@
       "-DSTM32F4",
       "-I../libopencm3/include",
       "-Iinc",
+      "-I../shared/inc",
       "-c",
       "-o",
-      "src/core/timer.o",
-      "src/core/timer.c"
+      "src/timer.o",
+      "src/timer.c"
     ],
-    "directory": "/home/arjun/Documents/bare-metal-firmware-stm32/app",
-    "file": "/home/arjun/Documents/bare-metal-firmware-stm32/app/src/core/timer.c",
-    "output": "/home/arjun/Documents/bare-metal-firmware-stm32/app/src/core/timer.o"
+    "directory": "/home/arjun/Documents/simple-photoframe/app",
+    "file": "/home/arjun/Documents/simple-photoframe/app/src/timer.c",
+    "output": "/home/arjun/Documents/simple-photoframe/app/src/timer.o"
   }
 ]

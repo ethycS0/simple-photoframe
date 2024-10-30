@@ -1,5 +1,5 @@
-#ifndef APP_INC_CORE_SYSTEM
-#define APP_INC_CORE_SYSTEM
+#ifndef SHARED_INC_SYSTEM
+#define SHARED_INC_SYSTEM
 
 #include"common-defines.h"
 

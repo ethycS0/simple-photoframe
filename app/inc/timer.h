@@ -1,5 +1,5 @@
-#ifndef APP_INC_CORE_TIMER
-#define APP_INC_CORE_TIMER
+#ifndef APP_INC_TIMER
+#define APP_INC_TIMER
 
 #include"common-defines.h"
 

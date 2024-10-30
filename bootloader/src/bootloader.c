@@ -5,13 +5,13 @@
 #define MAIN_APP_START_ADDRESS  (FLASH_BASE + BOOTLOADER_SIZE)
 
 static void jump_to_firmware(void) {
-    vector_table_t* main_vector_table = (vector_table_t*)(MAIN_APP_START_ADDRESS);
-    main_vector_table->reset();
+        vector_table_t* main_vector_table = (vector_table_t*)(MAIN_APP_START_ADDRESS);
+        main_vector_table->reset();
 }
 
 int main(void) {
-    jump_to_firmware();
+        jump_to_firmware();
 
-    // never return
-    return 0;
+        // never return
+        return 0;
 }
