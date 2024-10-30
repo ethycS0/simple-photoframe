@@ -1,24 +1,30 @@
-#include "../inc/uart.h"
+#include "uart.h"
+#include "ring-buffer.h"
+
 #include <libopencm3/cm3/nvic.h>
 #include <libopencm3/stm32/usart.h>
 
 #define BAUD_RATE (115200)
+#define RING_SIZE (128)     // ~10ms latency
 
-static uint8_t data_buffer = 0U;
-static bool data_available = false;
+static ringbuffer_t rb = {0U};
+static uint8_t data_buffer[RING_SIZE] = {0U};
+
 
 void usart2_isr(void) {
         const bool overrun_occured = usart_get_flag(USART2, USART_FLAG_ORE) == 1;
         const bool recieved_data = usart_get_flag(USART2, USART_FLAG_RXNE) == 1;
 
         if(recieved_data || overrun_occured) {
-                data_buffer = (uint8_t)usart_recv(USART2);
-                data_available = true;
+                if (ringbuffer_write(&rb, (uint8_t)usart_recv(USART2))) {
+                        // Handle Failure
+                }
         }
 }
 
 void uart_setup(void) {
         // Enabled Clock for the Peripheral
+        ringbuffer_setup(&rb, data_buffer, RING_SIZE);
         rcc_periph_clock_enable(RCC_USART2);
 
         // Set USART flags
@@ -49,21 +55,27 @@ void uart_write_byte(uint8_t data) {
 }
 
 uint32_t uart_read(uint8_t* data, const uint32_t length) {
-        if(length > 0 && data_available) {
-                *data = data_buffer;
-                data_available = false;
-                return 1;        
+        if(length == 0) {
+                return 0;
         }
-        return 0;
+
+        for(uint32_t i = 0; i < length; i++) {
+                if(!ringbuffer_read(&rb, &data[i])) {
+                        return i;
+                }
+        }
+
+        return length;
 }
 
 uint8_t uart_read_byte(void) {
-        data_available = false;
-        return data_buffer;
+        uint8_t byte = 0;
+        (void)uart_read(&byte, 1);
+        return byte;
 }
 
 bool uart_data_available(void) {
-        return data_available;
+        return !ringbuffer_empty(&rb);
 }
 
 

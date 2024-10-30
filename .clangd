@@ -1,15 +1,11 @@
+
 CompileFlags:
+  CompilationDatabase: . 
   Add:
-    - ./app/compile_commands.json
-    - ./bootloader/compile_commands.json
-    - ./compile_commands.json
-    - "-I."
+    - "-I./shared/inc"
     - "--target=arm-none-eabi"
-    - "--gcc-toolchain=/usr/bin/arm-none-eabi-gcc"
+    - "--gcc-toolchain=/usr"
     - "--sysroot=/usr/arm-none-eabi"
     - "-DSTM32F4"
     - "-D__ARM_ARCH_7EM__"
-  
-  Diagnostics:
-    Disable:
-    - auto-import
+
