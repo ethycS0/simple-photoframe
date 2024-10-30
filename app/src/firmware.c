@@ -40,9 +40,7 @@ int main(void) {
             timer_pwm_set_duty_cycle(duty_cycle);
             start_time = system_get_ticks();
         }
-
     }
-
     // Never return
     return 0;
 }
