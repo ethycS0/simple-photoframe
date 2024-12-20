@@ -8,4 +8,5 @@ CompileFlags:
     - "--sysroot=/usr/arm-none-eabi"
     - "-DSTM32F4"
     - "-D__ARM_ARCH_7EM__"
-
+  Remove:
+    - "-I./fw_update/"

@@ -27,3 +27,10 @@ void system_setup(void) {
         systick_setup();
         rcc_setup();
 }
+
+void system_delay(uint64_t ms) {
+        uint64_t END_TIME= system_get_ticks() + ms;
+        while(system_get_ticks() > END_TIME) {
+                // spin
+        }
+}

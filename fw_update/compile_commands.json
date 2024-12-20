@@ -1,0 +1,19 @@
+[
+  {
+    "arguments": [
+      "/usr/bin/gcc",
+      "-Iinc",    
+      "-I/usr/include",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-c",
+      "-o",
+      "obj/main.o",
+      "src/main.c"
+    ],
+    "directory": "/home/arjun/Documents/simple-photoframe/fw_update",
+    "file": "/home/arjun/Documents/simple-photoframe/fw_update/src/main.c",
+    "output": "/home/arjun/Documents/simple-photoframe/fw_update/obj/main.o"
+  }
+]

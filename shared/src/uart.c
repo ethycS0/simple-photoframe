@@ -1,6 +1,6 @@
 #include "uart.h"
 #include "ring-buffer.h"
-
+#include "protocol.h"
 #include <libopencm3/cm3/nvic.h>
 #include <libopencm3/stm32/usart.h>
 
@@ -10,6 +10,8 @@
 static ringbuffer_t rb = {0U};
 static uint8_t data_buffer[RING_SIZE] = {0U};
 
+static packet_t pk = {0};
+static session_t ses = {0};
 
 void usart2_isr(void) {
         const bool overrun_occured = usart_get_flag(USART2, USART_FLAG_ORE) == 1;
@@ -39,9 +41,14 @@ void uart_setup(void) {
         usart_enable_rx_interrupt(USART2);
         nvic_enable_irq(NVIC_USART2_IRQ);
 
-        // Enbable
+        // Enable
         usart_enable(USART2);
 
+}
+
+bool uart_session(void) {
+        validate_session(&ses);
+        return true;
 }
 
 void uart_write(uint8_t* data, const uint32_t length) {
@@ -70,7 +77,7 @@ uint32_t uart_read(uint8_t* data, const uint32_t length) {
 
 uint8_t uart_read_byte(void) {
         uint8_t byte = 0;
-        (void)uart_read(&byte, 1);
+        uart_read(&byte, 1);
         return byte;
 }
 
