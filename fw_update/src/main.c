@@ -21,7 +21,7 @@ int main(void) {
         struct termios UART_settings;
         
         // BAUD RATE
-        cfsetspeed(UART_settings, B115200); 
+        cfsetspeed(&UART_settings, B115200); 
 
         // 
 
