@@ -53,7 +53,9 @@ int main(void) {
                 }
 
                 while(uart_data_available()) {
-                        uart_session();
+                        // uart_session();
+                        uint8_t data = uart_read_byte();
+                        uart_write_byte(data + 1);
                 }
 
         }

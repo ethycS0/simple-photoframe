@@ -1,10 +1,11 @@
-
 # Be silent per default, but 'make V=1' will show all compiler calls.
 ifneq ($(V),1)
 Q		:= @
 NULL		:= 2>/dev/null
 endif
 
+##############################################################################
+# Diretory Setup
 SRC_DIR     = src
 INC_DIR     = inc
 OPENCM3_DIR = ../libopencm3

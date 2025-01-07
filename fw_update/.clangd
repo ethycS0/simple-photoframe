@@ -1,5 +1,0 @@
-CompileFlags:
-  Add:
-    - "-I./inc"
-    - "-I/usr/include" 
-    - "--gcc-toolchain=/usr"
