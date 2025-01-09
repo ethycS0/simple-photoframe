@@ -1,0 +1,38 @@
+#include "protocol.h"
+#include "system.h"
+#include "uart.h"
+
+#define packet_ACK (0x61)
+#define packet_NAK (0x6E)
+#define session_ACK (0x41)
+#define session_NAK (0x4E)
+
+#define MAX_PACKETS (0x7070)
+#define MAGIC (0x5959)
+
+#define RETRIES (15)
+
+void send_response(uint8_t response_value) { uart_write_byte(response_value); }
+
+bool validate_session(session_t *ss) {
+        ss->magic_no[0] = 0x00;
+        uint16_t magic = 0;
+        do {
+                ss->magic_no[1] = ss->magic_no[0];
+                ss->magic_no[0] = uart_read_byte();
+                magic = (ss->magic_no[1] << 8 | ss->magic_no[0]);
+        } while (magic != MAGIC);
+        send_response(session_NAK);
+
+        uart_read(ss->total_packets, 2);
+        uint16_t total = (ss->total_packets[1] << 8 | ss->total_packets[0]);
+        if (total > MAX_PACKETS) {
+                uart_write_byte(session_NAK);
+                return false;
+        }
+
+        // crc check
+
+        uart_write_byte(session_ACK);
+        return true;
+}

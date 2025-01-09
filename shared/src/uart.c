@@ -10,8 +10,6 @@
 static ringbuffer_t rb = {0U};
 static uint8_t data_buffer[RING_SIZE] = {0U};
 
-static packet_t pk = {0};
-static session_t ses = {0};
 
 void usart2_isr(void) {
         const bool overrun_occured = usart_get_flag(USART2, USART_FLAG_ORE) == 1;
@@ -47,6 +45,7 @@ void uart_setup(void) {
 }
 
 bool uart_session(void) {
+        session_t ses = {0};
         validate_session(&ses);
         return true;
 }

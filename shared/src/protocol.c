@@ -7,8 +7,8 @@
 #define session_ACK     (0x41)
 #define session_NAK     (0x4E)
 
-#define MAX_PACKETS     (10)
-#define MAGIC           (0xA5A5)
+#define MAX_PACKETS     (0x7070)
+#define MAGIC           (0x5959)
 
 #define RETRIES         (5)
 
@@ -16,10 +16,13 @@ void send_response(uint8_t response_value) {
         uart_write_byte(response_value);   
 }
 
-bool protocol_byte(uint8_t data) {
+bool protocol_byte(uint8_t* data) {
+        while(!uart_data_available()) {
+                // wait
+        }
+
         uint8_t i = 0;
-        while((data = uart_read_byte()) == 0x00 && i < RETRIES) {
-                data = uart_read_byte();
+        while((*data = uart_read_byte()) == 0x00 && i < RETRIES) {
                 i++;
         }
         if(i >= RETRIES) {
@@ -32,8 +35,8 @@ bool validate_session(session_t* ss) {
         bool lo;
         bool hi;
 
-        lo = protocol_byte(ss->magic_no[1]);
-        hi = protocol_byte(ss->magic_no[0]);
+        lo = protocol_byte(&ss->magic_no[1]);
+        hi = protocol_byte(&ss->magic_no[0]);
 
         if(lo == false || hi == false) {
                 send_response(packet_NAK);
@@ -45,8 +48,8 @@ bool validate_session(session_t* ss) {
                 return false;
         }
 
-        lo = protocol_byte(ss->total_packets[1]);
-        hi = protocol_byte(ss->total_packets[0]);
+        lo = protocol_byte(&ss->total_packets[1]);
+        hi = protocol_byte(&ss->total_packets[0]);
         
         if(lo == false || hi == false) {
                 send_response(packet_NAK);

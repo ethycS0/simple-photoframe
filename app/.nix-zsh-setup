@@ -1,0 +1,4 @@
+# Custom OpenOCD Command
+openocdstart() {
+  openocd -f /nix/store/nzv996f2mlm0ssfxb3l7gc31h8qsls0h-openocd-0.12.0/share/openocd/scripts/interface/stlink.cfg           -f /nix/store/nzv996f2mlm0ssfxb3l7gc31h8qsls0h-openocd-0.12.0/share/openocd/scripts/target/stm32f4x.cfg
+}

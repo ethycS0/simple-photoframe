@@ -21,6 +21,6 @@ void send_response(uint8_t response_value);
 bool validate_session(session_t* ss);
 bool validate_packet(packet_t* pk);
 
-bool protocol_byte(uint8_t data);
+bool protocol_byte(uint8_t* data);
 
 #endif
