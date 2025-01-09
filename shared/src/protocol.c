@@ -1,68 +1,48 @@
 #include "protocol.h"
-#include"uart.h"
-#include"system.h"
+#include "system.h"
+#include "uart.h"
 
-#define packet_ACK      (0x61)
-#define packet_NAK      (0x6E)
-#define session_ACK     (0x41)
-#define session_NAK     (0x4E)
+#define packet_ACK (0x61)
+#define packet_NAK (0x6E)
+#define session_ACK (0x41)
+#define session_NAK (0x4E)
 
-#define MAX_PACKETS     (0x7070)
-#define MAGIC           (0x5959)
+#define MAX_PACKETS (0x7070)
+#define MAGIC (0x5959)
 
-#define RETRIES         (5)
+#define RETRIES (15)
+#define TIMEOUT (5000)
 
-void send_response(uint8_t response_value) {
-        uart_write_byte(response_value);   
-}
+bool validate_session(session_t *ss) {
+        ss->magic_no[0] = 0x00;
+        uint16_t magic = 0;
+        int i = 0;
 
-bool protocol_byte(uint8_t* data) {
-        while(!uart_data_available()) {
-                // wait
-        }
+        // Check Magic Number
+        do {
+                ss->magic_no[1] = ss->magic_no[0];
+                uint64_t timeout = TIMEOUT + system_get_ticks();
+                while(!uart_data_available()) {
+                        if(system_get_ticks() > timeout) {
+                                uart_write_byte(session_NAK);
+                                return false;
+                        }
+                }
 
-        uint8_t i = 0;
-        while((*data = uart_read_byte()) == 0x00 && i < RETRIES) {
-                i++;
-        }
-        if(i >= RETRIES) {
-                return false;
-        }
-        return true;
-}
+                ss->magic_no[0] = uart_read_byte();
+                magic = (ss->magic_no[1] << 8 | ss->magic_no[0]);
+                i += 1;
 
-bool validate_session(session_t* ss) {
-        bool lo;
-        bool hi;
+                if(i >= RETRIES) {
+                        uart_write_byte(session_NAK);
+                        return false;
+                }
+        } while (magic != MAGIC);
 
-        lo = protocol_byte(&ss->magic_no[1]);
-        hi = protocol_byte(&ss->magic_no[0]);
 
-        if(lo == false || hi == false) {
-                send_response(packet_NAK);
-        }
-         
-        uint16_t magic = (ss->magic_no[0] << 8 | ss->magic_no[1]);
-        if(magic != MAGIC) {
-                send_response(session_NAK);
-                return false;
-        }
+        // Check Total Packets
 
-        lo = protocol_byte(&ss->total_packets[1]);
-        hi = protocol_byte(&ss->total_packets[0]);
-        
-        if(lo == false || hi == false) {
-                send_response(packet_NAK);
-        }
 
-        uint16_t total = (ss->total_packets[0] << 8 | ss->total_packets[1]);
-        if(total > MAX_PACKETS) {
-                send_response(packet_NAK);
-                return false;
-        }
-
-        // crc check
-        
-        send_response(session_ACK);
+        uart_write_byte(session_ACK);
         return true;
 }

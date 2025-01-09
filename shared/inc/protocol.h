@@ -16,8 +16,6 @@ typedef struct session_t {
         uint8_t crc;
 } session_t;
 
-void send_response(uint8_t response_value); 
-
 bool validate_session(session_t* ss);
 bool validate_packet(packet_t* pk);
 

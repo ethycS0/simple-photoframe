@@ -52,9 +52,7 @@ int main(void) {
                         start_time = system_get_ticks();
                 }
 
-                while(uart_data_available()) {
-                        // int data = uart_read_byte();
-                        // uart_write_byte(data + 1);
+                if(uart_data_available()) {
                         uart_session();
                 }
 
