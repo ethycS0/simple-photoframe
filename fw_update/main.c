@@ -1,11 +1,37 @@
 #include <fcntl.h>
-#include <stdint.h>
+#include <stdlib.h>
 #include <stdio.h>
 #include <termios.h>
 #include <unistd.h>
 
 #define MAX_SIZE (0x669A)
-#define KEY (0x4152)
+
+unsigned char* generate_crc(unsigned char* data, int length); 
+
+
+unsigned char* generate_crc(unsigned char* data, int length) {
+        unsigned short crc = 0x1d0f;
+        while(length--) {
+                crc ^= (unsigned short)(*data++) << 8;
+                for(int i = 0; i < 8; i++) {
+                        if(crc & 0x8000) {
+                                crc = (crc << 1) ^ 0x1021;
+                        } else {
+                                crc <<= 1;
+                        }
+                }
+        }
+        unsigned char* result = (unsigned char*)malloc(2 * sizeof(unsigned char));
+        if(result == NULL) {
+                return NULL;
+        }
+
+        result[1] = (unsigned char)(crc & 0x00ff);
+        result[0] = (unsigned char)((crc >> 8) & 0x00ff);
+
+        return result;
+}
+
 
 int main(void) {
 
@@ -38,15 +64,16 @@ int main(void) {
                 return -1;
         }
         fseek(firmware, 0L, SEEK_END);
-        long fsize = (ftell(firmware)) / 16;
-        if (fsize > (long)MAX_SIZE) {
+        long fsize = ftell(firmware);
+        long total_packets_bytes = (fsize + 15) / 16;
+        if (total_packets_bytes > (long)MAX_SIZE) {
                 printf("Firmware size too large\n");
                 return -1;
         }
 
         unsigned char total_packets[2];
-        total_packets[0] = (unsigned char)(fsize & 0xFF);
-        total_packets[1] = (unsigned char)((fsize >> 8) & 0xFF);
+        total_packets[1] = (unsigned char)(total_packets_bytes & 0x00FF);
+        total_packets[0] = (unsigned char)((total_packets_bytes >> 8) & 0x00FF);
 
         // UART configuration
 
@@ -75,13 +102,35 @@ int main(void) {
         ssize_t trns;
         unsigned char response[1];
 
-        unsigned char session_packet[4];
+        unsigned char session_packet[6];
         unsigned char magic[] = {0x41, 0x59};
+
+        // CRC Calculation
+
+        unsigned char* crc;
 
         session_packet[0] = magic[0];
         session_packet[1] = magic[1];
         session_packet[2] = total_packets[0];
         session_packet[3] = total_packets[1];
+
+        for(int i = 0; i < 4; i++) {
+                printf("%02X\n", session_packet[i]);
+        }
+        crc = generate_crc(session_packet, 4);
+        if(crc == NULL) {
+                printf("CRC Calculation Issue\n");
+                return -1;
+        }
+
+        session_packet[4] = crc[0];
+        session_packet[5] = crc[1];
+
+        // Log Session
+        printf("Session Initialization Log\n");
+        printf("Magic: %02X%02X\n", session_packet[0], session_packet[1]);
+        printf("Total Packets: %02X%02X\n", session_packet[2], session_packet[3]);
+        printf("CRC: %02X%02X\n", session_packet[4], session_packet[5]);
 
         trns = write(fd, session_packet, sizeof(session_packet));
         if (trns == -1) {

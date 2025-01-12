@@ -16,6 +16,9 @@ typedef struct session_t {
         uint8_t crc[2];
 } session_t;
 
+
+unsigned short generate_crc(unsigned char* data, int length); 
+
 bool validate_session(session_t* ss);
 bool validate_packet(packet_t* pk);
 
