@@ -20,9 +20,11 @@ pkgs.mkShell {
     stlink
 
     screen
+    xxd
   ];
 
   shellHook = ''
+        SHELL=${pkgs.zsh}/bin/zsh
         cat > .nix-zsh-setup <<EOF
     # Custom OpenOCD Command
     openocdstart() {
@@ -30,5 +32,7 @@ pkgs.mkShell {
               -f ${pkgs.openocd}/share/openocd/scripts/target/stm32f4x.cfg
     }
     EOF
+
+        tmux new-session -s simple-photoframe
   '';
 }
