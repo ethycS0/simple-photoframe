@@ -16,5 +16,5 @@
 # Ignore map files
 *.map
 
-./fw_update/main
-./fw_update/test
+fw_update/main
+fw_update/test
